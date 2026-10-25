@@ -69,7 +69,12 @@ def evaluate_retrieval(bot, top_k=3):
 
         retrieved_files = [fname for fname, _ in retrieved]
 
-        hit = any(f in retrieved_files for f in expected) if expected else False
+        # A query with no expected files should be refused, so retrieving
+        # nothing counts as a hit.
+        if expected:
+            hit = any(f in retrieved_files for f in expected)
+        else:
+            hit = retrieved_files == []
         if hit:
             hits += 1
 
